@@ -24,4 +24,8 @@ public class ProductResponse {
     private Long categoryId;
 
     private String categoryName;
+
+    private double averageRating;
+
+    private int totalReviews;
 }

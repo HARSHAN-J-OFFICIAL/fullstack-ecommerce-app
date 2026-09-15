@@ -17,6 +17,7 @@ import com.ecommerce.security.CustomUserDetailsService;
 import com.ecommerce.security.JwtUtil;
 
 import com.ecommerce.service.AuthService;
+import com.ecommerce.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final CustomUserDetailsService customUserDetailsService;
 
+    private final EmailService emailService;
+
     @Override
     public void register(RegisterRequest request) {
 
@@ -70,7 +73,8 @@ public class AuthServiceImpl implements AuthService {
                 .roles(Set.of(userRole))
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(savedUser);
     }
 
     @Override

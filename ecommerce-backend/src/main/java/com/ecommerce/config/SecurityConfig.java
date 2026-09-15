@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.http.HttpMethod;
+
 import org.springframework.security.authentication.AuthenticationManager;
 
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -122,11 +124,31 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(
+                                HttpMethod.GET,
+                                "/products/**",
+                                "/categories/**"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/orders/admin/**",
+                                "/admin/coupons/**",
+                                "/admin/analytics/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
                                 "/cart/**"
                         ).authenticated()
 
                         .requestMatchers(
                                 "/addresses/**"
+                        ).authenticated()
+
+                        .requestMatchers(
+                                "/wishlist/**"
+                        ).authenticated()
+
+                        .requestMatchers(
+                                "/coupons/**"
                         ).authenticated()
 
                         .anyRequest().authenticated()

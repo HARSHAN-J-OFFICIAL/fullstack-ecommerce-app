@@ -10,6 +10,7 @@ import com.ecommerce.exception.ResourceNotFoundException;
 
 import com.ecommerce.repository.CategoryRepository;
 import com.ecommerce.repository.ProductRepository;
+import com.ecommerce.repository.ReviewRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,8 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final CategoryRepository categoryRepository;
+
+    private final ReviewRepository reviewRepository;
 
     // CREATE PRODUCT
     public ProductResponse createProduct(
@@ -248,6 +251,12 @@ public class ProductService {
             Product product
     ) {
 
+        Double avgRating = reviewRepository.getAverageRatingByProductId(product.getId());
+        Integer count = reviewRepository.getTotalReviewsByProductId(product.getId());
+
+        double formattedAvg = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
+        int totalRev = count != null ? count : 0;
+
         return ProductResponse.builder()
 
                 .id(
@@ -285,6 +294,10 @@ public class ProductService {
                                 ? product.getCategory().getName()
                                 : null
                 )
+
+                .averageRating(formattedAvg)
+
+                .totalReviews(totalRev)
 
                 .build();
     }

@@ -28,6 +28,7 @@ public class Order {
     private User user;
 
     // Order items
+    @Builder.Default
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
@@ -44,4 +45,26 @@ public class Order {
 
     // Order creation time
     private LocalDateTime orderDate;
+
+    // Shipping address for the order
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address shippingAddress;
+
+    // Payment details
+    private String paymentId;
+    private String razorpayOrderId;
+    private String paymentStatus;
+    private String paymentMethod;
+
+    // Coupon details
+    private String couponCode;
+    @Builder.Default
+    private double discountAmount = 0.0;
+
+    // Status history tracking
+    @Builder.Default
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("timestamp ASC")
+    private List<OrderStatusHistory> statusHistory = new ArrayList<>();
 }
